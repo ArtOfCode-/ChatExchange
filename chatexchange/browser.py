@@ -548,13 +548,20 @@ class Browser(object):
             reputation = int(profile_soup.select('.reputation-score')[0]['title'])
         else:
             reputation = -1
+            
+        stats_elements = profile_soup.select('.user-valuecell')
+        if len(stats_elements) >= 3:
+            last_seen = _utils.parse_last_seen(stats_elements[2].text)
+        else:
+            last_seen = _utils.parse_last_seen('1y ago')
 
         return {
             'name': name,
             'is_moderator': is_moderator,
             'message_count': message_count,
             'room_count': room_count,
-            'reputation': reputation
+            'reputation': reputation,
+            'last_seen': last_seen
         }
 
     def get_room_info(self, room_id):
